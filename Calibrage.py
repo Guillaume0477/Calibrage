@@ -4,29 +4,33 @@ from matplotlib import pyplot as plt
 import math
 
 
-img = cv2.imread('capture_mire_0.png',0)
+img = cv2.imread('capture_mire_1.png',0)
 
 # print(cv2.findChessboardCorners(img, (7, 7)))
 found, coord_px = cv2.findChessboardCorners(img, (7, 7), None)
 cv2.drawChessboardCorners(img, (7,7), coord_px, found)
 #de haut en bas de gauche à droite
+print(coord_px)
 
 #Coordonnées des coins sur l'image en réalité (coordonnées objet de la mire)
 coord_mm = [[[20*i, 20*j] for j in range(7)] for i in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
+print(coord_mm)
 
-zToUse = 0
+zToUse = 120
 i1, i2 = np.shape(img)
-print(np.shape(img))
+#print(np.shape(img))
 i1 /= 2
 i2 /= 2
 
-mem = np.copy(coord_px[:,0,1])
-coord_px[:,0,1] = coord_px[:,0,0]
-coord_px[:,0,0] = mem
+# mem = np.copy(coord_px[:,0,1])
+# coord_px[:,0,1] = coord_px[:,0,0]
+# coord_px[:,0,0] = mem
 
 sgnO2c = (i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
+print(sgnO2c)
 coord_px = np.array(coord_px)
+#print(coord_px)
 
 U1 = coord_px[:,:,0] - i1
 U2 = coord_px[:,:,1] - i2
@@ -69,7 +73,7 @@ phi=-math.atan(r23/r33)
 gamma=-math.atan(r12/r11)
 omega=math.atan(r13/(-r23*math.sin(phi)+r33*math.cos(phi)))
 
-print([phi, gamma, omega])
+print(np.array([phi, gamma, omega])*180/math.pi)
 
 x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(len(U2))]).T
 vecR2 = -(np.dot(r2, x0bis))
@@ -79,10 +83,10 @@ vecR2 = -(np.dot(r2, x0bis))
 # print(np.shape(B))
 
 # img[434:438,438:560] = 0
-# cv2.imshow('Capture_Affine', img) #affichage
+cv2.imshow('Capture_Affine', img) #affichage
 
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 
 
