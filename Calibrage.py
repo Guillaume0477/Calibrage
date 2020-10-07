@@ -78,12 +78,25 @@ omega=math.atan(r13/(-r23*math.sin(phi)+r33*math.cos(phi)))
 print(beta, np.array([phi, gamma, omega])*180/math.pi)
 
 
-# x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(len(U2))]).T
-# vecR2 = np.reshape(-(np.dot(r2, x0bis + o2c)), np.shape(U2))
+x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(np.shape(coord_px)[0])]).T
+x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse2] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
+vecR2 = np.reshape(-(np.dot(r2, x0bis + o2c)), np.shape(U2))
 
-# B = np.concatenate([U2, vecR2], axis = 1)
+B = np.concatenate([U2, vecR2], axis = 1)
 
-# vecR3 = np.reshape(-(np.dot(r2, x0bis)), np.shape(U2))
+vecR3 = np.reshape(-(np.dot(r2, x0bis)), np.shape(U2))
+
+R = np.multiply(vecR3, -U2)
+
+B_inv = np.linalg.pinv(B)
+M = np.dot(B_inv, R)
+
+f = 4
+o3c = M[0]
+
+s2 = f/M[1]
+s1 = beta*s2
+
 
 # img[434:438,438:560] = 0
 # cv2.imshow('Capture_Affine', img2) #affichage
