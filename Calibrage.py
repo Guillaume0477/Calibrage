@@ -28,13 +28,19 @@ x0 = [coord_mm[i,0,:].tolist() + [zToUse, 1] + coord_mm[i,0,:].tolist() + [zToUs
 #Multiplication de Hadamard
 A = np.multiply(U,x0)
 
+A_inv = np.linalg.pinv(A)
 
+#l= A_inv*(U1.T)
 
-l = np.array([1,1,1,1,1,1,1])
+l=np.dot(A_inv,U1)
+l=l.T
+l=l[0]
+print(l)
+
 
 o2c=1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
 beta=o2c*math.sqrt(l[0]**2+l[1]**2+l[2]**2)
-o1c=l[4]*o2c/beta
+o1c=l[3]*o2c/beta
 r11=l[0]*o2c/beta
 r12=l[1]*o2c/beta
 r13=l[2]*o2c/beta
@@ -42,9 +48,9 @@ r21=l[4]*o2c
 r22=l[5]*o2c
 r23=l[6]*o2c
 
-u = np.array([r11,r12,r13])
-v = np.array([r21,r22,r23])
-r3 = np.cross(u,v)
+uu = np.array([r11,r12,r13])
+vv = np.array([r21,r22,r23])
+r3 = np.cross(uu,vv)
 
 r31=r3[0]
 r32=r3[1]
@@ -52,8 +58,8 @@ r33=r3[2]
 
 
 phi=-math.atan(r23/r33)
-gama=-math.atan(r12/r11)
-w=math.atan(r13/(r23*math.sin(phi)+r33*math.cos(phi)))
+gamma=-math.atan(r12/r11)
+omega=math.atan(r13/(r23*math.sin(phi)+r33*math.cos(phi)))
 
 
 
