@@ -15,14 +15,18 @@ cv2.drawChessboardCorners(img, (7,7), coord_px, found)
 coord_mm = [[[20*i, 20*j] for j in range(7)] for i in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
 
-
+zToUse = 0
+i1, i2 = np.shape(img)
+i1 /= 2
+i2 /= 2
 coord_px = np.array(coord_px)
-U1 = coord_px[:,:,0]
+U1 = coord_px[:,:,0] - i1
 
 
-zToUse = 0;
 
-U = [[coord_px[i,0,1]]*4 + [-coord_px[i,0,0]]*3 for i in range(len(U1))]
+
+
+U = [[coord_px[i,0,1] - i2]*4 + [-coord_px[i,0,0]+i1]*3 for i in range(len(U1))]
 x0 = [coord_mm[i,0,:].tolist() + [zToUse, 1] + coord_mm[i,0,:].tolist() + [zToUse] for i in range(len(U1))]
 
 #Multiplication de Hadamard
@@ -59,7 +63,11 @@ r33=r3[2]
 
 phi=-math.atan(r23/r33)
 gamma=-math.atan(r12/r11)
+<<<<<<< Updated upstream
 omega=math.atan(r13/(r23*math.sin(phi)+r33*math.cos(phi)))
+=======
+omega=math.atan(r13/(-r23*math.sin(phi)+r33*math.cos(phi)))
+>>>>>>> Stashed changes
 
 
 
