@@ -13,7 +13,7 @@ found, coord_px2 = cv2.findChessboardCorners(img2, (7, 7), None)
 cv2.drawChessboardCorners(img, (7,7), coord_px, found)
 cv2.drawChessboardCorners(img2, (7,7), coord_px2, found)
 #de haut en bas de gauche à droite
-#print(coord_px)
+
 print(coord_px2)
 
 
@@ -21,14 +21,17 @@ print(coord_px2)
 #Coordonnées des coins sur l'image en réalité (coordonnées objet de la mire)
 coord_mm = [[[20*i, 20*j] for i in range(7)] for j in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
-#print(coord_mm)
+print(coord_mm)
 
-zToUse = 0
-zToUse2 = 120
-i1, i2 = np.shape(img)
+zToUse = -60
+zToUse2 = 60
+i2, i1 = np.shape(img)
 
-i1 /= 2
-i2 /= 2
+
+i1 = i1/2
+i2 = i2/2
+
+print(i1,i2)
 
 # mem = np.copy(coord_px[:,0,1])
 # coord_px[:,0,1] = coord_px[:,0,0]
@@ -38,13 +41,14 @@ i2 /= 2
 # coord_px2[:,0,1] = coord_px2[:,0,0]
 # coord_px2[:,0,0] = mem2
 
-sgnO2c = (i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
+sgnO2c =-1# (i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
 coord_px = np.array(coord_px)
 coord_px2 = np.array(coord_px2)
 
+print(coord_px)
 U1 = np.concatenate((coord_px[:,:,0], coord_px2[:,:,0]), axis = 0) - i1
 U2 = np.concatenate((coord_px[:,:,1], coord_px2[:,:,1]), axis = 0) - i2
-#print(U1)
+print(U1)
 
 U = [[U2[i][0]]*4 + [-U1[i][0]]*3 for i in range(len(U1))]
 x0 = [coord_mm[i,0,:].tolist() + [zToUse, 1] + coord_mm[i,0,:].tolist() + [zToUse] for i in range(np.shape(coord_px)[0])]
@@ -69,7 +73,7 @@ l=l[0]
 
 
 
-modo2c=1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
+modo2c=-1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
 print("modo2c",modo2c)
 beta=modo2c*math.sqrt(l[0]**2+l[1]**2+l[2]**2)
 print("beta",beta)
@@ -108,6 +112,8 @@ x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(np.shape(co
 x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse2] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
 vecR2 = np.reshape(-(np.dot(r2, x0bis + o2c)), np.shape(U2))
 
+print(x0bis)
+
 B = np.concatenate([U2, vecR2], axis = 1)
 
 vecR3 = np.reshape(-(np.dot(r2, x0bis)), np.shape(U2))
@@ -126,7 +132,7 @@ s1 = s2/beta
 
 f1=f/s1
 
-x_test=[0,0,0]
+x_test=[20,20,0]
 
 test_u1 = f1*(r11*x_test[0]+r12*x_test[1]+r13*x_test[2]+o1c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
 test_u2 = f2*(r21*x_test[0]+r22*x_test[1]+r23*x_test[2]+o2c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
@@ -137,7 +143,20 @@ print(int(test_u2+i2))
 
 print(np.vdot(r2,r1))
 
+#cv2.circle(img2,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
+cv2.circle(img2,(int(test_u2+i2),int(test_u1+i1)),5,0.5,-1)
+cv2.circle(img2,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
+cv2.circle(img2,(int(test_u2),int(test_u1)),5,0.5,-1)
+cv2.circle(img2,(int(test_u1),int(test_u2)),5,0.5,-1)
+cv2.circle(img2,(int(test_u2+i2),int(test_u1+i2)),5,0.5,-1)
+cv2.circle(img2,(int(test_u1+i2),int(test_u2+i1)),5,0.5,-1)
+
+cv2.circle(img,(int(test_u2+i2),int(test_u1+i1)),5,0.5,-1)
 cv2.circle(img,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
+cv2.circle(img,(int(test_u2),int(test_u1)),5,0.5,-1)
+cv2.circle(img,(int(test_u1),int(test_u2)),5,0.5,-1)
+cv2.circle(img,(int(test_u2+i2),int(test_u1+i2)),5,0.5,-1)
+cv2.circle(img,(int(test_u1+i2),int(test_u2+i1)),5,0.5,-1)
 
 img[160:164,62:66] = 0
 
