@@ -41,7 +41,7 @@ print(i1,i2)
 # coord_px2[:,0,1] = coord_px2[:,0,0]
 # coord_px2[:,0,0] = mem2
 
-sgnO2c =-1# (i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
+sgnO2c =(i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
 coord_px = np.array(coord_px)
 coord_px2 = np.array(coord_px2)
 
@@ -157,7 +157,7 @@ print(np.shape(M))
 
 f = 4
 o3c = M[0]
-f2=M[1]
+f2 = M[1]
 
 s2 = f/f2
 s1 = s2/beta
@@ -167,39 +167,90 @@ print(s1,s2)
 
 f1=f/s1
 
-x_test=[100,100,120]
 
-test_u1 = f1*(r11*x_test[0]+r12*x_test[1]+r13*x_test[2]+o1c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
-test_u2 = f2*(r21*x_test[0]+r22*x_test[1]+r23*x_test[2]+o2c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
+x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(np.shape(coord_px)[0])]).T
+x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse2] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
+print(x0bis[0][8])
+print(x0bis[1][8])
+print(x0bis[2][8])
+print(x0bis[0])
+print(x0bis)
+
+x_test=[120,0,0]
+
+print(np.shape(x0bis))
+#reproduced_U1 = np.array([ [f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2]+o3c) + i1] for i in range(np.shape(x0bis)[0])])
+#reproduced_U1 = np.array([ f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2]+o3c) + i1 for i in range(np.shape(x0bis)[1])])
+
+thickness = 3
+radius = 5
+color = (255, 0, 0)
+for loop in range(np.shape(x0bis)[1]) :
+
+    reproduced_U11 = f1*(r11*x0bis[0][loop]+r12*x0bis[1][loop]+r13*x0bis[2][loop]+o1c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i1 
+    reproduced_U22 = f2*(r21*x0bis[0][loop]+r22*x0bis[1][loop]+r23*x0bis[2][loop]+o2c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i2 
+    center_coordinates = (int(reproduced_U11), int(reproduced_U22))
+    print("center",center_coordinates)
+    if loop < np.shape(x0bis)[1]/2:
+        cv2.circle(img, center_coordinates, radius, color, thickness)
+    else :
+        cv2.circle(img2, center_coordinates, radius, color, thickness)
 
 
-print(int(test_u1+i1))
-print(int(test_u2+i2))
+    
 
-print(np.vdot(r2,r1))
+#print(reproduced_U1)
+print(reproduced_U11)
+print(reproduced_U22)
+
+#print(int(test_u1+i1))
+#print(int(test_u2+i2))
+
+
+
+
+   
+# Window name in which image is displayed
+
+  
+# Center coordinates
+
+# Radius of circle
+
+  
+# Blue color in BGR
+
+  
+# Line thickness of 2 px
+
+  
+# Using cv2.circle() method
+# Draw a circle with blue line borders of thickness of 2 px
+#image = cv2.circle(img, center_coordinates, radius, color, thickness)
+  
+# Displaying the image 
+
 
 #cv2.circle(img2,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
-cv2.circle(img2,(int(test_u2+i2),int(test_u1+i1)),5,0.5,-1)
-cv2.circle(img2,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
-cv2.circle(img2,(int(test_u2),int(test_u1)),5,0.5,-1)
-cv2.circle(img2,(int(test_u1),int(test_u2)),5,0.5,-1)
-cv2.circle(img2,(int(test_u2+i2),int(test_u1+i2)),5,0.5,-1)
-cv2.circle(img2,(int(test_u1+i2),int(test_u2+i1)),5,0.5,-1)
+# cv2.circle(img2,(int(test_u2+i2),int(test_u1+i1)),5,0.5,-1)
 
-cv2.circle(img,(int(test_u2+i2),int(test_u1+i1)),5,0.5,-1)
-cv2.circle(img,(int(test_u1+i1),int(test_u2+i2)),5,0.5,-1)
-cv2.circle(img,(int(test_u2),int(test_u1)),5,0.5,-1)
-cv2.circle(img,(int(test_u1),int(test_u2)),5,0.5,-1)
-cv2.circle(img,(int(test_u2+i2),int(test_u1+i2)),5,0.5,-1)
-cv2.circle(img,(int(test_u1+i2),int(test_u2+i1)),5,0.5,-1)
 
-img[160:164,62:66] = 0
+#ok
+#cv2.circle(img2,(int(test_u1+i1),int(test_u2+i2)),5,color,2)
+
+
+#cv2.circle(img,(int(test_u1+i1),int(test_u2+i2)),5,color,2)
+
+
+#img[160:164,62:66] = 0
 
 #img[int(test_u1+i1),int(test_u2+i2)]=255
 #img2[230-2:230+2,215-2:215+2]=[0,0,255]
 #cv2.circle(img,(230,215),5,0.5,-1)
+print(s1,s2)
 
-cv2.imshow('Capture_Affine', img2) #affichage
+cv2.imshow('image 1', img) #affichage
+cv2.imshow('image 2', img2) #affichage
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
