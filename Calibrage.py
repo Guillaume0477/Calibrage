@@ -33,7 +33,7 @@ i2 = i2/2
 # coord_px2[:,0,1] = coord_px2[:,0,0]
 # coord_px2[:,0,0] = mem2
 
-sgnO2c =1#(i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
+sgnO2c =(i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
 coord_px = np.array(coord_px)
 coord_px2 = np.array(coord_px2)
 
@@ -67,7 +67,7 @@ r23=l[6]*o2c
 
 r1 = np.array([r11,r12,r13])
 r2 = np.array([r21,r22,r23])
-r3 = np.cross(r2,r1)
+r3 = np.cross(r1,r2)
 
 r31=r3[0]
 r32=r3[1]
