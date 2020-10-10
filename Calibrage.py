@@ -18,7 +18,7 @@ coord_mm = np.reshape(coord_mm, np.shape(coord_px))
 print(coord_mm)
 
 zToUse = 120
-i1, i2 = np.shape(img)
+i2, i1 = np.shape(img)
 #print(np.shape(img))
 i1 /= 2
 i2 /= 2
@@ -27,7 +27,7 @@ i2 /= 2
 # coord_px[:,0,1] = coord_px[:,0,0]
 # coord_px[:,0,0] = mem
 
-sgnO2c = (i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
+sgnO2c = 1#(i2 > coord_px[0,0,1]) * (-1) + (i2 < coord_px[0,0,1]) * 1
 print(sgnO2c)
 coord_px = np.array(coord_px)
 #print(coord_px)
