@@ -23,8 +23,8 @@ coord_mm = [[[20*i, 20*j] for i in range(7)] for j in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
 print(coord_mm)
 
-zToUse = -60
-zToUse2 = 60
+zToUse = 0
+zToUse2 = 120
 i2, i1 = np.shape(img)
 
 
@@ -73,7 +73,7 @@ l=l[0]
 
 
 
-modo2c=-1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
+modo2c=1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
 print("modo2c",modo2c)
 beta=modo2c*math.sqrt(l[0]**2+l[1]**2+l[2]**2)
 print("beta",beta)
@@ -98,8 +98,11 @@ r2 = np.array([r21,r22,r23])
 r3 = np.cross(r2,r1)
 
 r31=r3[0]
+print("r31",r31)
 r32=r3[1]
+print("r32",r32)
 r33=r3[2]
+print("r33",r33)
 
 phi=-math.atan(r23/r33)
 gamma=-math.atan(r12/r11)
@@ -107,21 +110,50 @@ omega=math.atan(r13/(-r23*math.sin(phi)+r33*math.cos(phi)))
 
 print(beta, np.array([phi, gamma, omega])*180/math.pi)
 
-
 x0bis = np.array([coord_mm[i,0,:].tolist() + [zToUse] for i in range(np.shape(coord_px)[0])]).T
-x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse2] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
-vecR2 = np.reshape(-(np.dot(r2, x0bis + o2c)), np.shape(U2))
-
 print(x0bis)
+x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse2] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
+print("caca")
+print(x0bis)
+vecR2 = np.reshape(-(np.dot(r2, x0bis)+o2c), np.shape(U2))
+print(vecR2)
+print(o2c)
 
-B = np.concatenate([U2, vecR2], axis = 1)
+print(np.shape(x0bis))
 
-vecR3 = np.reshape(-(np.dot(r2, x0bis)), np.shape(U2))
 
-R = np.multiply(vecR3, -U2)
+B = np.concatenate([U2, vecR2], axis = 1) #ok
+
+print(r2)
+print(x0bis)
+print(-np.dot(r2, x0bis))
+()
+
+vecR3 = np.reshape((np.dot(r3, x0bis)), np.shape(U2))
+print(vecR3)
+print(np.shape(vecR3))
+
+R = np.multiply(vecR3, -U2) #multiply ok
+
+
+
+r31=r3[0]
+print("r31",r31)
+r32=r3[1]
+print("r32",r32)
+r33=r3[2]
+print("r33",r33)
+print("vecR3",vecR3)
+print("r2",r2)
+print("x0bis",x0bis)
+print("vecR3",vecR3)
+
+
 
 B_inv = np.linalg.pinv(B)
 M = np.dot(B_inv, R)
+
+print(np.shape(M))
 
 f = 4
 o3c = M[0]
@@ -130,9 +162,12 @@ f2=M[1]
 s2 = f/f2
 s1 = s2/beta
 
+print(f)
+print(s1,s2)
+
 f1=f/s1
 
-x_test=[20,20,0]
+x_test=[100,100,120]
 
 test_u1 = f1*(r11*x_test[0]+r12*x_test[1]+r13*x_test[2]+o1c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
 test_u2 = f2*(r21*x_test[0]+r22*x_test[1]+r23*x_test[2]+o2c)/(r31*x_test[0]+r32*x_test[1]+r33*x_test[2]+o3c)
@@ -164,7 +199,7 @@ img[160:164,62:66] = 0
 #img2[230-2:230+2,215-2:215+2]=[0,0,255]
 #cv2.circle(img,(230,215),5,0.5,-1)
 
-cv2.imshow('Capture_Affine', img) #affichage
+cv2.imshow('Capture_Affine', img2) #affichage
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
