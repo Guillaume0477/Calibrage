@@ -3,10 +3,14 @@ import cv2
 from matplotlib import pyplot as plt
 import math
 
-name_img = 'capture_mire_0.png'
-name_img2 = 'capture_mire_1.png'
+#name_img = 'capture_mire_0.png'
+#name_img2 = 'capture_mire_1.png'
+name_img = '1111.jpg'
+name_img2 = '2222.jpg'
+name_img3 = '3333.jpg'
 img = cv2.imread(name_img,0)
 img2 = cv2.imread(name_img2,0)
+img3 = cv2.imread(name_img3,0)
 
 #img = cv2.imread('WIN_20201012_14_35_29_Pro.jpg',0)
 #img = cv2.imread('WIN_20201012_14_35_01_Pro.jpg',0)
@@ -33,7 +37,7 @@ coord_mm = [[[20*i, 20*j] for i in range(7)] for j in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
 
 zToUse = 0 # image1
-zToUse2 = 120 # image2
+zToUse2 = 100 # image2
 zToUse3 = 200 # image3
 i2, i1 = np.shape(img)
 
@@ -137,12 +141,12 @@ f1=f/s1
 # reproduced_U1_array = np.array([ [f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i1] for i in range(np.shape(x0bis)[1])])
 # reproduced_U2_array = np.array([ f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i2 for i in range(np.shape(x0bis)[1])])
 
-#x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
+x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
 
 
 img_print = cv2.imread(name_img,3)
 img2_print = cv2.imread(name_img2,3)
-#img3_print = cv2.imread(name_img3,3)
+img3_print = cv2.imread(name_img3,3)
 
 thickness = 2
 radius = 4
@@ -152,14 +156,14 @@ for loop in range(np.shape(x0bis)[1]) :
     reproduced_U11 = f1*(r11*x0bis[0][loop]+r12*x0bis[1][loop]+r13*x0bis[2][loop]+o1c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i1 
     reproduced_U22 = f2*(r21*x0bis[0][loop]+r22*x0bis[1][loop]+r23*x0bis[2][loop]+o2c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i2 
     center_coordinates = (int(reproduced_U11), int(reproduced_U22))
-    if loop < np.shape(x0bis)[1]/2:
-    #if loop < np.shape(x0bis)[1]/3:
+    #if loop < np.shape(x0bis)[1]/2:
+    if loop < np.shape(x0bis)[1]/3:
         cv2.circle(img_print, center_coordinates, radius, color, thickness)
-    else:
-    #elif loop < np.shape(x0bis)[1]*2/3:
+    #else:
+    elif loop < np.shape(x0bis)[1]*2/3:
         cv2.circle(img2_print, center_coordinates, radius, color, thickness)
-    #else :
-    #    cv2.circle(img3_print, center_coordinates, radius, color, thickness)
+    else :
+        cv2.circle(img3_print, center_coordinates, radius, color, thickness)
 
 
 
@@ -168,7 +172,7 @@ for loop in range(np.shape(x0bis)[1]) :
 
 cv2.imshow('image 1', img_print) #affichage
 cv2.imshow('image 2', img2_print) #affichage
-#cv2.imshow('image 3', img3_print) #affichage
+cv2.imshow('image 3', img3_print) #affichage
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
@@ -202,7 +206,7 @@ img_size = (img_print.shape[1], img_print.shape[0])
 print(img_size)
 
 imaage = cv2.imread("1111.jpg", cv2.IMREAD_COLOR)
-imaage = cv2.cvtColor(imaage,cv2.COLOR_BGR2GRAY)
+imaage =cv2.cvtColor(imaage,cv2.COLOR_BGR2GRAY)
 
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera((np.array([[ 0.,  0.,  0.],
    [ 1.,  0.,  0.],
