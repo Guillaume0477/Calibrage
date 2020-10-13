@@ -5,9 +5,9 @@ import math
 
 #name_img = 'capture_mire_0.png'
 #name_img2 = 'capture_mire_1.png'
-name_img = 'capture_mire_0.png'
-name_img2 = 'capture_mire_1.png'
-name_img3 = 'capture_mire_1.png'
+name_img = '1111.jpg'
+name_img2 = '2222.jpg'
+name_img3 = '3333.jpg'
 img = cv2.imread(name_img,0)
 img2 = cv2.imread(name_img2,0)
 img3 = cv2.imread(name_img3,0)
@@ -33,7 +33,7 @@ cv2.drawChessboardCorners(img2, (7,7), coord_px2, found)
 #de haut en bas de gauche à droite
 
 #Coordonnées des coins sur l'image en réalité (coordonnées objet de la mire)
-coord_mm = [[[20*i, 20*j] for i in range(7)] for j in range(7)]
+coord_mm = [[[19*i, 19*j] for i in range(7)] for j in range(7)]
 coord_mm = np.reshape(coord_mm, np.shape(coord_px))
 
 zToUse = 0 # image1
@@ -76,7 +76,6 @@ A_inv = np.linalg.pinv(A)
 l=np.dot(A_inv,U1)
 l=l.T
 l=l[0]
-
 
 
 modo2c=1/math.sqrt(l[4]**2+l[5]**2+l[6]**2)
@@ -141,8 +140,7 @@ f1=f/s1
 # reproduced_U1_array = np.array([ [f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i1] for i in range(np.shape(x0bis)[1])])
 # reproduced_U2_array = np.array([ f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i2 for i in range(np.shape(x0bis)[1])])
 
-#x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
-
+x0bis_3_images = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
 
 img_print = cv2.imread(name_img,3)
 img2_print = cv2.imread(name_img2,3)
@@ -151,22 +149,19 @@ img3_print = cv2.imread(name_img3,3)
 thickness = 2
 radius = 4
 color = (158, 108, 253) #BRG
-for loop in range(np.shape(x0bis)[1]) :
+for loop in range(np.shape(x0bis_3_images)[1]) :
 
-    reproduced_U11 = f1*(r11*x0bis[0][loop]+r12*x0bis[1][loop]+r13*x0bis[2][loop]+o1c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i1 
-    reproduced_U22 = f2*(r21*x0bis[0][loop]+r22*x0bis[1][loop]+r23*x0bis[2][loop]+o2c)/(r31*x0bis[0][loop]+r32*x0bis[1][loop]+r33*x0bis[2][loop]+o3c) + i2 
+    reproduced_U11 = f1*(r11*x0bis_3_images[0][loop]+r12*x0bis_3_images[1][loop]+r13*x0bis_3_images[2][loop]+o1c)/(r31*x0bis_3_images[0][loop]+r32*x0bis_3_images[1][loop]+r33*x0bis_3_images[2][loop]+o3c) + i1 
+    reproduced_U22 = f2*(r21*x0bis_3_images[0][loop]+r22*x0bis_3_images[1][loop]+r23*x0bis_3_images[2][loop]+o2c)/(r31*x0bis_3_images[0][loop]+r32*x0bis_3_images[1][loop]+r33*x0bis_3_images[2][loop]+o3c) + i2 
     center_coordinates = (int(reproduced_U11), int(reproduced_U22))
     #if loop < np.shape(x0bis)[1]/2:
-    if loop < np.shape(x0bis)[1]/3:
+    if loop < np.shape(x0bis_3_images)[1]/3:
         cv2.circle(img_print, center_coordinates, radius, color, thickness)
     #else:
-    elif loop < np.shape(x0bis)[1]*2/3:
+    elif loop < np.shape(x0bis_3_images)[1]*2/3:
         cv2.circle(img2_print, center_coordinates, radius, color, thickness)
     else :
         cv2.circle(img3_print, center_coordinates, radius, color, thickness)
-
-
-
 
 
 
@@ -176,55 +171,20 @@ cv2.imshow('image 3', img3_print) #affichage
 
 
 
-
 objpoints = np.array(x0bis.T,np.float32)
-
 imgpoints = np.array(coord_im, np.float32)
 
+# Read a test image
+img = cv2.imread('1111.jpg')
+img_size = (img.shape[1], img.shape[0])
 
-print(np.shape(objpoints))
-print(objpoints)
-print(np.shape(imgpoints))
-print(imgpoints)
+camera_matrix = cv2.initCameraMatrix2D([objpoints],[imgpoints], img_size)
+ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(np.array([objpoints],dtype=np.float32),np.array([imgpoints],dtype=np.float32), img_size, camera_matrix, None, flags=cv2.CALIB_USE_INTRINSIC_GUESS)
 
+dst = cv2.undistort(img, mtx, dist, None, mtx)
+cv2.imwrite('./capture_mire_1_undist.png',dst)
 
-# Arrays to store object points and image points from all the images.
-#objpoints = []  # 3d points in real world space
-#imgpoints = []  # 2d points in image plane.
-
-# for k in range(np.shape(x0bis)[1]) :
-#     objpoints.append(x0bis.T[k])
-#     imgpoints.append(coord_im[k])
-
-# imgpoints = np.float32(imgpoints)  
-# objpoints = np.float32(objpoints)  
-
-# # calibrate the camera
-img_size = (img_print.shape[1], img_print.shape[0])
-print(img_size)
-
-imaage = cv2.imread("capture_mire_1.png", cv2.IMREAD_COLOR)
-imaage =cv2.cvtColor(imaage,cv2.COLOR_BGR2GRAY)
-
-
-camera_matrix = cv2.initCameraMatrix2D([objpoints],[imgpoints], imaage.shape[::-1])
-ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(np.array([objpoints],dtype=np.float32),np.array([imgpoints],dtype=np.float32),  imaage.shape[::-1], camera_matrix, None, flags=cv2.CALIB_USE_INTRINSIC_GUESS)
-
-
-img = cv2.imread('capture_mire_1.png')
-h,  w = img.shape[:2]
-newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
-
-# undistort
-dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
-
-# crop the image
-x,y,w,h = roi
-dst = dst[y:y+h, x:x+w]
-cv2.imwrite('calibresult.png',dst)
-
-
-print(camera_matrix)
+cv2.imshow('undist', dst) #affichage
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
