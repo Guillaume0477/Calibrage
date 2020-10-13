@@ -5,9 +5,9 @@ import math
 
 #name_img = 'capture_mire_0.png'
 #name_img2 = 'capture_mire_1.png'
-name_img = '1111.jpg'
-name_img2 = '2222.jpg'
-name_img3 = '3333.jpg'
+name_img = 'capture_mire_0.png'
+name_img2 = 'capture_mire_1.png'
+name_img3 = 'capture_mire_1.png'
 img = cv2.imread(name_img,0)
 img2 = cv2.imread(name_img2,0)
 img3 = cv2.imread(name_img3,0)
@@ -141,7 +141,7 @@ f1=f/s1
 # reproduced_U1_array = np.array([ [f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i1] for i in range(np.shape(x0bis)[1])])
 # reproduced_U2_array = np.array([ f1*(r11*x0bis[0][i]+r12*x0bis[1][i]+r13*x0bis[2][i]+o1c)/(r31*x0bis[0][i]+r32*x0bis[1][i]+r33*x0bis[2][i]+o3c) + i2 for i in range(np.shape(x0bis)[1])])
 
-x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
+#x0bis = np.concatenate((x0bis,np.array([coord_mm[i,0,:].tolist() + [zToUse3] for i in range(np.shape(coord_px2)[0])]).T), axis = 1)
 
 
 img_print = cv2.imread(name_img,3)
@@ -174,8 +174,6 @@ cv2.imshow('image 1', img_print) #affichage
 cv2.imshow('image 2', img2_print) #affichage
 cv2.imshow('image 3', img3_print) #affichage
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
 
 
 
@@ -205,126 +203,29 @@ print(imgpoints)
 img_size = (img_print.shape[1], img_print.shape[0])
 print(img_size)
 
-imaage = cv2.imread("1111.jpg", cv2.IMREAD_COLOR)
+imaage = cv2.imread("capture_mire_1.png", cv2.IMREAD_COLOR)
 imaage =cv2.cvtColor(imaage,cv2.COLOR_BGR2GRAY)
 
-ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera((np.array([[ 0.,  0.,  0.],
-   [ 1.,  0.,  0.],
-   [ 2.,  0.,  0.],
-   [ 3.,  0.,  0.],
-   [ 4.,  0.,  0.],
-   [ 5.,  0.,  0.],
-   [ 6.,  0.,  0.],
-   [ 7.,  0.,  0.],
-   [ 8.,  0.,  0.],
-   [ 0.,  1.,  0.],
-   [ 1.,  1.,  0.],
-   [ 2.,  1.,  0.],
-   [ 3.,  1.,  0.],
-   [ 4.,  1.,  0.],
-   [ 5.,  1.,  0.],
-   [ 6.,  1.,  0.],
-   [ 7.,  1.,  0.],
-   [ 8.,  1.,  0.],
-   [ 0.,  2.,  0.],
-   [ 1.,  2.,  0.],
-   [ 2.,  2.,  0.],
-   [ 3.,  2.,  0.],
-   [ 4.,  2.,  0.],
-   [ 5.,  2.,  0.],
-   [ 6.,  2.,  0.],
-   [ 7.,  2.,  0.],
-   [ 8.,  2.,  0.],
-   [ 0.,  3.,  0.],
-   [ 1.,  3.,  0.],
-   [ 2.,  3.,  0.],
-   [ 3.,  3.,  0.],
-   [ 4.,  3.,  0.],
-   [ 5.,  3.,  0.],
-   [ 6.,  3.,  0.],
-   [ 7.,  3.,  0.],
-   [ 8.,  3.,  0.],
-   [ 0.,  4.,  0.],
-   [ 1.,  4.,  0.],
-   [ 2.,  4.,  0.],
-   [ 3.,  4.,  0.],
-   [ 4.,  4.,  0.],
-   [ 5.,  4.,  0.],
-   [ 6.,  4.,  0.],
-   [ 7.,  4.,  0.],
-   [ 8.,  4.,  0.],
-   [ 0.,  5.,  0.],
-   [ 1.,  5.,  0.],
-   [ 2.,  5.,  0.],
-   [ 3.,  5.,  0.],
-   [ 4.,  5.,  0.],
-   [ 5.,  5.,  0.],
-   [ 6.,  5.,  0.],
-   [ 7.,  5.,  0.],
-   [ 8.,  5.,  0.]], dtype=np.float32)), (np.array([[ 0.,  0.,  0.],
-   [ 1.,  0.,  0.],
-   [ 2.,  0.,  0.],
-   [ 3.,  0.,  0.],
-   [ 4.,  0.,  0.],
-   [ 5.,  0.,  0.],
-   [ 6.,  0.,  0.],
-   [ 7.,  0.,  0.],
-   [ 8.,  0.,  0.],
-   [ 0.,  1.,  0.],
-   [ 1.,  1.,  0.],
-   [ 2.,  1.,  0.],
-   [ 3.,  1.,  0.],
-   [ 4.,  1.,  0.],
-   [ 5.,  1.,  0.],
-   [ 6.,  1.,  0.],
-   [ 7.,  1.,  0.],
-   [ 8.,  1.,  0.],
-   [ 0.,  2.,  0.],
-   [ 1.,  2.,  0.],
-   [ 2.,  2.,  0.],
-   [ 3.,  2.,  0.],
-   [ 4.,  2.,  0.],
-   [ 5.,  2.,  0.],
-   [ 6.,  2.,  0.],
-   [ 7.,  2.,  0.],
-   [ 8.,  2.,  0.],
-   [ 0.,  3.,  0.],
-   [ 1.,  3.,  0.],
-   [ 2.,  3.,  0.],
-   [ 3.,  3.,  0.],
-   [ 4.,  3.,  0.],
-   [ 5.,  3.,  0.],
-   [ 6.,  3.,  0.],
-   [ 7.,  3.,  0.],
-   [ 8.,  3.,  0.],
-   [ 0.,  4.,  0.],
-   [ 1.,  4.,  0.],
-   [ 2.,  4.,  0.],
-   [ 3.,  4.,  0.],
-   [ 4.,  4.,  0.],
-   [ 5.,  4.,  0.],
-   [ 6.,  4.,  0.],
-   [ 7.,  4.,  0.],
-   [ 8.,  4.,  0.],
-   [ 0.,  5.,  0.],
-   [ 1.,  5.,  0.],
-   [ 2.,  5.,  0.],
-   [ 3.,  5.,  0.],
-   [ 4.,  5.,  0.],
-   [ 5.,  5.,  0.],
-   [ 6.,  5.,  0.],
-   [ 7.,  5.,  0.],
-   [ 8.,  5.,  0.]], dtype=np.float32)),  imaage.shape[::-1], None, None)
 
-# Save the camera calibration result for later use (we don't use rvecs / tvecs)
-dist_pickle = {}
-dist_pickle["mtx"] = mtx
-dist_pickle["dist"] = dist
-destnation = path.join(basepath,'calibration_pickle.p')
-pickle.dump( dist_pickle, open( destnation, "wb" ) )
-print("calibration data is written into: {}".format(destnation))
+camera_matrix = cv2.initCameraMatrix2D([objpoints],[imgpoints], imaage.shape[::-1])
+ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(np.array([objpoints],dtype=np.float32),np.array([imgpoints],dtype=np.float32),  imaage.shape[::-1], camera_matrix, None, flags=cv2.CALIB_USE_INTRINSIC_GUESS)
 
 
+img = cv2.imread('capture_mire_1.png')
+h,  w = img.shape[:2]
+newcameramtx, roi=cv2.getOptimalNewCameraMatrix(mtx,dist,(w,h),1,(w,h))
+
+# undistort
+dst = cv2.undistort(img, mtx, dist, None, newcameramtx)
+
+# crop the image
+x,y,w,h = roi
+dst = dst[y:y+h, x:x+w]
+cv2.imwrite('calibresult.png',dst)
 
 
+print(camera_matrix)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
